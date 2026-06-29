@@ -7,22 +7,48 @@ sdk: docker
 pinned: false
 ---
 
-# PDF QA Chatbot
+# PDF Question Answering API
 
-RAG-based PDF question answering API built with FastAPI, LangChain, ChromaDB, and HuggingFace.
+A RAG-based (Retrieval-Augmented Generation) REST API that allows users to upload PDF documents and ask questions about their content using semantic search and large language models.
 
-## Stack
-- FastAPI
-- LangChain
-- ChromaDB
-- HuggingFace Embeddings (all-MiniLM-L6-v2)
-- Mistral-7B-Instruct (HuggingFace Inference API)
+## Live Demo
+API Docs: https://irmakkoseoglu-pdf-qa-chatbot.hf.space/docs
+
+## Tech Stack
+- **FastAPI** — REST API framework
+- **LangChain** — RAG pipeline orchestration
+- **ChromaDB** — Vector database for semantic search
+- **HuggingFace Embeddings** — `sentence-transformers/all-MiniLM-L6-v2`
+- **Mistral-7B-Instruct** — LLM for answer generation (via HuggingFace Inference API)
+- **Docker** — Containerization
+
+## Project Structure
+QA_chatbot/
+├── main.py              # Local version (Ollama + TinyLlama)
+├── main_deployed.py     # Deploy version (HuggingFace Inference API)
+├── Dockerfile
+├── requirements.txt
+└── README.md
+
+## API Endpoints
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/` | Health check |
+| POST | `/upload` | Upload a PDF file |
+| POST | `/query` | Ask a question about uploaded PDFs |
+
+## Local Development
+```bash
+# Install Ollama and pull model
+ollama pull tinyllama
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run locally
+uvicorn main:app --reload
+```
 
 ## Note on LLM
-Default model is Mistral-7B via HuggingFace Inference API.
-For better/different results, change `LLM_MODEL` in `main_deploy.py`.
-
-## Endpoints
-- `POST /upload` — PDF yükle
-- `POST /query` — Soru sor
-- `GET /` — Sağlık kontrolü
+- **Local:** TinyLlama via Ollama (`main.py`)
+- **Deployed:** Mistral-7B-Instruct via HuggingFace Inference API (`main_deployed.py`)
